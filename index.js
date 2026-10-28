@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const testTransaction = [
+let testTransaction = [
   {
     id: '1',
     title: 'Операция 1',
@@ -24,6 +24,20 @@ const testTransaction = [
 
 app.get('/api/transaction', (req, res) => {
   res.json(testTransaction);
+});
+
+app.post('/api/transaction', (req, res) => {
+  const newTransaction = req.body;
+  testTransaction.push(newTransaction);
+
+  res.json(newTransaction);
+});
+
+app.delete('/api/transaction/:id', (req, res) => {
+  const id = req.params.id;
+
+  testTransaction = testTransaction.filter((item) => item.id !== id);
+  res.json({ success: true, id });
 });
 
 app.listen(3000, () => {
