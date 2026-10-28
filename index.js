@@ -36,8 +36,11 @@ app.post('/api/transaction', (req, res) => {
 app.delete('/api/transaction/:id', (req, res) => {
   const id = req.params.id;
 
+  const testTransactionDelete = testTransaction.find((item) => item.id === id);
+
   testTransaction = testTransaction.filter((item) => item.id !== id);
-  res.json({ success: true, id });
+
+  res.json(testTransactionDelete);
 });
 
 app.listen(3000, () => {
