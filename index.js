@@ -38,6 +38,12 @@ app.delete('/api/transaction/:id', (req, res) => {
 
   const testTransactionDelete = testTransaction.find((item) => item.id === id);
 
+  if (!testTransactionDelete) {
+    return res
+      .status(404)
+      .json({ message: 'Транзакция не найдена или уже удалена' });
+  }
+
   testTransaction = testTransaction.filter((item) => item.id !== id);
 
   res.json(testTransactionDelete);
