@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,83 @@ let testTransaction = [
     createdAt: 1793048400000,
   },
 ];
+
+let users = [
+  {
+    id: 'user-1',
+    email: 'test@test.ru',
+    password: '$2b$10$vI8A7vYm6wV48F.N9SSTPO49bFtwWty5tqgDq0rFWh6Q9N7C2FUi2',
+    name: 'Corey',
+    surname: 'Taylor',
+  },
+];
+
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { name, surname, email, password } = req.body;
+    if (!name || !surname || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Заполните все обязательные поля' });
+    }
+
+    const foundEmail = users.find((user) => user.email === email);
+
+    if (foundEmail) {
+      return res
+        .status(400)
+        .json({ message: 'Пользователь с таким email уже существует' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = {
+      id: `user-${Date.now()}`,
+      email: email,
+      password: hashedPassword,
+      name: name,
+      surname: surname,
+    };
+    users.push(newUser);
+    const { password: _, ...userWithoutPassword } = newUser;
+    res.status(201).json(userWithoutPassword);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Произошла ошибка на сервере при регистрации' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Заполните все обязательные поля' });
+    }
+
+    const user = users.find((usr) => usr.email === email);
+
+    if (!user) {
+      return res.status(401).json({ message: 'Неверный email или пароль' });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Неверный email или пароль' });
+    }
+
+    const { password: _, ...userWithoutPassword } = user;
+    res.status(200).json(userWithoutPassword);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Произошла ошибка на сервере при входе' });
+  }
+});
 
 app.get('/api/transaction', (req, res) => {
   res.json(testTransaction);
