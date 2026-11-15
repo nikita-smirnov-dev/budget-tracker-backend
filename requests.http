@@ -4,8 +4,8 @@ Content-Type: application/json
 {
   "name": "Joey",
   "surname": "Jordison",
-  "email": "joey@mail.ru",
-  "password": "123slip"
+  "email": "joey21@mail.ru",
+  "password": "21347645"
 }
 
 ### 
@@ -17,3 +17,8 @@ Content-Type: application/json
   "email": "joey@mail.ru",
   "password": "123slip"
 }
+
+###
+
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTE3OTQ0Mjc2MTg4ODkiLCJpYXQiOjE3OTQ0Mjc2MzEsImV4cCI6MTc5NDg1OTYzMX0.El3iZEGcAqqqp5xJmngL-ke_w2Z1C2LMW3kF__2m5Vs
