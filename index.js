@@ -75,6 +75,41 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+app.patch('/api/auth/profile', authMiddleware, (req, res) => {
+  const userTokenId = req.userId;
+  try {
+    const { name, surname } = req.body;
+    const updateName = name?.trim();
+    const updateSurname = surname?.trim();
+
+    if (
+      !updateName ||
+      !updateSurname ||
+      updateName.length > 30 ||
+      updateSurname.length > 30
+    ) {
+      return res.status(400).json({
+        message: 'Имя и Фамилия обязательны и не должны превышать 30 символов',
+      });
+    }
+    const user = users.find((usr) => usr.id === userTokenId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+    user.name = updateName;
+    user.surname = updateSurname;
+
+    const { password: _, ...userWithoutPassword } = user;
+    res.status(200).json(userWithoutPassword);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Произошла ошибка на сервере при обновлении' });
+  }
+});
+
 app.get('/api/auth/me', authMiddleware, (req, res) => {
   const userTokenId = req.userId;
   const user = users.find((usr) => usr.id === userTokenId);
@@ -105,7 +140,6 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
     const newUser = {
       id: `user-${Date.now()}`,
       email: email,

@@ -14,11 +14,22 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "joey@mail.ru",
-  "password": "123slip"
+  "email": "joey21@mail.ru",
+  "password": "21347645"
 }
 
 ###
 
 GET http://localhost:3000/api/auth/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTE3OTQ0Mjc2MTg4ODkiLCJpYXQiOjE3OTQ0Mjc2MzEsImV4cCI6MTc5NDg1OTYzMX0.El3iZEGcAqqqp5xJmngL-ke_w2Z1C2LMW3kF__2m5Vs
+
+###
+
+PATCH http://localhost:3000/api/auth/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTE3OTUzNTM3MDExOTIiLCJpYXQiOjE3OTUzNTM3MDEsImV4cCI6MTc5NTc4NTcwMX0.P9cxNufj0ZSXKOhaHOXx9ePXeQhPgeyjlrMZy-vvln4
+
+{
+  "name": "newName",
+  "surname": "newSurname"
+}
